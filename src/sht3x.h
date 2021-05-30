@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#define SHT3X_SAMPLE_MAX (10)
+
 class SHT3X
 {
 public:
@@ -14,6 +16,10 @@ public:
 
 private:
     int addr;
+    int pos;
+    int count;
+    float tempBuffer[SHT3X_SAMPLE_MAX];
+    float humidityBuffer[SHT3X_SAMPLE_MAX];
 };
 
 #endif //__SHT3X__

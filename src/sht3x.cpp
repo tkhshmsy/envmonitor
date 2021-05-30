@@ -5,6 +5,8 @@
 
 SHT3X::SHT3X()
 {
+    pos = 0;
+    count = 0;
 }
 
 SHT3X::~SHT3X()
@@ -40,11 +42,36 @@ bool SHT3X::get(float* temp, float* humidity)
         return false;
     }
     // Convert the data
-    if (temp != nullptr) {
-        *temp = ((((data[0] * 256.0) + data[1]) * 175) / 65535.0) - 45;
+    float cTemp = ((((data[0] * 256.0) + data[1]) * 175) / 65535.0) - 45;
+    float cHumidity = ((((data[3] * 256.0) + data[4]) * 100) / 65535.0);
+
+    tempBuffer[pos] = cTemp;
+    humidityBuffer[pos] = cHumidity;
+    count++;
+    if (count >= SHT3X_SAMPLE_MAX) {
+        count = SHT3X_SAMPLE_MAX;
     }
-    if (humidity != nullptr) {
-        *humidity = ((((data[3] * 256.0) + data[4]) * 100) / 65535.0);
+    pos++;
+    if (pos >= SHT3X_SAMPLE_MAX) {
+        pos = 0;
+    }
+    {
+        float sum = 0.0;
+        for (int i = 0; i < count && i < SHT3X_SAMPLE_MAX; i++) {
+            sum += tempBuffer[i];
+        }
+        if (temp != nullptr) {
+            *temp = sum / (float)count;
+        }
+    }
+    {
+        float sum = 0.0;
+        for (int i = 0; i < count && i < SHT3X_SAMPLE_MAX; i++) {
+            sum += humidityBuffer[i];
+        }
+        if (humidity != nullptr) {
+            *humidity = sum / (float)count;
+        }
     }
     return true;
 }

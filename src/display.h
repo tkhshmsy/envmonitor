@@ -36,6 +36,7 @@ private:
     struct tm timeinfo;
     float temperature;
     float humidity;
+    float discomfortIndex;
     WeatherInfo weatherInfos[2];
 
 };

@@ -26,8 +26,8 @@ void setup() {
     Serial.printf("Connecting to %s ", WIFI_SSID);
     WiFi.begin(WIFI_SSID, WIFI_PASS);
     while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
+        delay(500);
+        Serial.print(".");
     }
     Serial.println("Connected");
 
@@ -40,6 +40,16 @@ void setup() {
 void loop() {
     static int seconds = 0;
 
+    while (WiFi.status() != WL_CONNECTED) {
+        WiFi.disconnect();
+        Serial.print("re-connect WiFi.");
+        WiFi.reconnect();
+        while (WiFi.status() != WL_CONNECTED) {
+            delay(500);
+            Serial.print(".");
+        }
+    }
+
     if (ntp.getTime(&timeinfo) == true) {
         display.setTimeInfo(timeinfo);
     }
@@ -48,6 +58,8 @@ void loop() {
         display.setHumidity(humidity);
     }
     if (seconds % 1800 == 0) {
+        ntp.sync();
+
         if (weather.onecall("lat=35.6996&lon=139.6217&exclude=minutely,hourly,alerts") == true) {
             {
                 JsonObject current = weather.json["current"];

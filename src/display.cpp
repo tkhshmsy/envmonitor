@@ -131,7 +131,7 @@ void Display::drawHeader()
     M5.Lcd.setTextColor(TFT_CYAN, TFT_BLACK);
     M5.Lcd.setCursor(0, 0);
     char buf[12];
-    sprintf(buf, "%02d/%02d %02d:%02d", timeinfo.tm_mon, timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min);
+    sprintf(buf, "%02d/%02d %02d:%02d", timeinfo.tm_mon + 1, timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min);
     M5.Lcd.drawCentreString(buf, 160, 0, 4); // font4=ascii 26px
 }
 

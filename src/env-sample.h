@@ -8,4 +8,7 @@
 
 #define OPENWEATHERMAP_APIKEY "your APIKEY"
 
+#define AMBIENT_CHANNELID (your channel ID)
+#define AMBIENT_WRITEKEY "your write-key"
+
 #endif //__ENV__

@@ -16,6 +16,8 @@ M5Stackを使用した環境モニタ
   - 当日
   - 翌日
 
+また計測値はAmbient.ioに送信する。
+
 ## Require
 
 this project is built on platformio
@@ -33,6 +35,7 @@ this project is built on platformio
 
 - API
   - [OpenWeatherMap]( https://openweathermap.org/ )
+  - [Ambient]( https://ambidata.io/ )
 - Libs
   - [M5Stack]( https://github.com/m5stack/M5Stack )
   - [ArduinoJson]( https://github.com/bblanchon/ArduinoJson )
@@ -40,10 +43,6 @@ this project is built on platformio
   - [MHZ19_uart]( https://github.com/nara256/mhz19_uart )
 - KANJI fonts
 - Weather icons
-
-## TODO
-
-- support [Ambient]( https://ambidata.io/ )
 
 ## Author
 

@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include <time.h>
 #include <ArduinoJson.h>
+#include <Ambient.h>
 
 #include "env.h"
 #include "ntpclock.h"
@@ -11,6 +12,9 @@
 #include "sht3x.h"
 #include "mhz19.h"
 #include "display.h"
+
+Ambient ambient;
+WiFiClient client;
 
 NTPClock ntp;
 struct tm timeinfo;
@@ -43,6 +47,8 @@ void setup() {
     weather.setup();
     sht3x.setup();
     mhz19.setup(16, 17);
+
+    ambient.begin(AMBIENT_CHANNELID, AMBIENT_WRITEKEY, &client);
 }
 
 void loop() {
@@ -65,9 +71,14 @@ void loop() {
         display.setTemperature(temp);
         display.setHumidity(humidity);
         display.setDiscomfortIndex();
+
+        ambient.set(1, String(temp).c_str());
+        ambient.set(2, String(humidity).c_str());
     }
     if (mhz19.get(&co2ppm) == true){
         display.setCO2(co2ppm);
+
+        ambient.set(3, String(co2ppm).c_str());
     }
 
     if (seconds % 1800 == 0) {
@@ -114,6 +125,10 @@ void loop() {
             display.showWeather();
         }
         flip++;
+    }
+    if (seconds % 300 == 0) {
+        ambient.send();
+        Serial.println("Ambient send.");
     }
 
     sleep(1);

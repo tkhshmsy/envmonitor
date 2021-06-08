@@ -35,6 +35,16 @@ void Display::setHumidity(float humidity)
     this->humidity = humidity;
 }
 
+void Display::setDiscomfortIndex()
+{
+    this->discomfortIndex = 46.3 + (temperature * 0.81) + (humidity * (0.99 * temperature - 14.3) * 0.01);
+}
+
+void Display::setCO2(int ppm)
+{
+    this->co2ppm = ppm;
+}
+
 void Display::setWeatherInfo(int index, Display::WeatherInfo weatherinfo)
 {
     if (index >= sizeof(weatherInfos) ) {
@@ -158,13 +168,33 @@ void Display::showEnvironment()
     M5.Lcd.drawRightString(buf, 320 - 48, baseline, 7); //font7=digit 48px
     baseline += 48 + 8;
 
-    discomfortIndex = 46.3 + (temperature * 0.81) + (humidity * (0.99 * temperature - 14.3) * 0.01);
     M5.Lcd.setTextColor(TFT_YELLOW, TFT_BLACK);
     drawWString(0, baseline + 48 - 24, (char *)"不快指数", 24);
     sprintf(buf, "%2.1f", discomfortIndex);
     Serial.println(buf);
     M5.Lcd.drawRightString(buf, 320 - 48, baseline, 7); //font7=digit 48px
 
+}
+
+void Display::showCO2()
+{
+    clear();
+    drawHeader();
+    int baseline = 32;
+    char buf[32];
+
+    M5.Lcd.setTextColor(TFT_GREEN, TFT_BLACK);
+    drawWString(0, baseline + 48 - 24, (char *)"ＣＯ２濃度", 24);
+    baseline += 48 + 8;
+
+    sprintf(buf, "%d", co2ppm);
+    Serial.println(buf);
+    M5.Lcd.drawRightString(buf, 320 - 72, baseline, 7); //font7=digit 48px
+    baseline += 48 + 8;
+
+    M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+    sprintf(buf, "ppm");
+    M5.Lcd.drawRightString(buf, 320 - 24, baseline, 4);
 }
 
 void Display::showWeather()

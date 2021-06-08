@@ -21,9 +21,12 @@ public:
     void setTimeInfo(struct tm timeinfo);
     void setTemperature(float temperature);
     void setHumidity(float humidity);
+    void setDiscomfortIndex();
+    void setCO2(int ppm);
     void setWeatherInfo(int index, Display::WeatherInfo weatherinfo);
 
     void showEnvironment();
+    void showCO2();
     void showWeather();
 
 private:
@@ -33,10 +36,12 @@ private:
     String NumString2WString(String src);
     void clear();
     void drawHeader();
+
     struct tm timeinfo;
     float temperature;
     float humidity;
     float discomfortIndex;
+    int co2ppm;
     WeatherInfo weatherInfos[2];
 
 };

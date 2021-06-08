@@ -9,14 +9,21 @@
 #include "ntpclock.h"
 #include "openweathermap.h"
 #include "sht3x.h"
+#include "mhz19.h"
 #include "display.h"
 
 NTPClock ntp;
 struct tm timeinfo;
+
 OpenWeatherMap weather;
+
 SHT3X sht3x;
 float temp;
 float humidity;
+
+MHZ19 mhz19;
+int co2ppm;
+
 Display display;
 
 void setup() {
@@ -35,6 +42,7 @@ void setup() {
     ntp.setup();
     weather.setup();
     sht3x.setup();
+    mhz19.setup(16, 17);
 }
 
 void loop() {
@@ -56,7 +64,12 @@ void loop() {
     if (sht3x.get(&temp, &humidity) == true) {
         display.setTemperature(temp);
         display.setHumidity(humidity);
+        display.setDiscomfortIndex();
     }
+    if (mhz19.get(&co2ppm) == true){
+        display.setCO2(co2ppm);
+    }
+
     if (seconds % 1800 == 0) {
         ntp.sync();
 
@@ -91,10 +104,13 @@ void loop() {
 
     if (seconds % 15 == 0) {
         static int flip = 0;
-        if ( flip % 2 == 0 ) {
+        if ( flip % 3 == 0 ) {
             display.showEnvironment();
         }
-        if ( flip % 2 == 1 ) {
+        if ( flip % 3 == 1 ) {
+            display.showCO2();
+        }
+        if ( flip % 3 == 2 ) {
             display.showWeather();
         }
         flip++;
